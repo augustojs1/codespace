@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -24,9 +26,18 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>Home | Codespace</title>
+      </Head>
+      <main>
+        <h1>Posts</h1>
+      </main>
+    </>
+  );
+}
 
 // export const getStaticProps = async () => {
 //   // const prismic = getPrismicClient();

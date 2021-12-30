@@ -12,8 +12,8 @@
 }
 
 body {
-  background: var();
-  color: var();
+  background: var(--black);
+  color: var(--gray);
 }
 
 @media (max-width: 1080px) {
