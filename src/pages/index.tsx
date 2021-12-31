@@ -2,7 +2,10 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { FiCalendar, FiUser } from 'react-icons/fi';
+import Prismic from '@prismicio/client';
+import Link from 'next/link';
 import { LoadMoreButton } from '../components/LoadMoreButton';
+import dateFormatter from '../utils/dateFormatter';
 
 import { getPrismicClient } from '../services/prismic';
 
@@ -28,76 +31,71 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home() {
+export default function Home({ postsPagination }: HomeProps) {
   return (
     <>
       <Head>
         <title>Home | Codespace</title>
       </Head>
       <main className={styles.homeContainer}>
-        <article className={styles.post}>
-          <h1>How to create a blog using Next.js and Prismic CMS</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            amet quia?
-          </p>
-          <div className={styles.postInfo}>
-            <span>
-              <FiCalendar size={18} />
-              <p>30 Dez 2021</p>
-            </span>
+        {postsPagination.results.map(post => (
+          <Link key={post.uid} href={`/posts/${post.uid}`}>
+            <article className={styles.post}>
+              <h1>{post.data.title}</h1>
+              <p>{post.data.subtitle}</p>
+              <div className={styles.postInfo}>
+                <span>
+                  <FiCalendar size={18} />
+                  <p>{dateFormatter(post.first_publication_date)}</p>
+                </span>
 
-            <span>
-              <FiUser size={18} />
-              <p>Augusto Souza</p>
-            </span>
-          </div>
-        </article>
-        <article className={styles.post}>
-          <h1>How to create a blog using Next.js and Prismic CMS</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            amet quia?
-          </p>
-          <div className={styles.postInfo}>
-            <span>
-              <FiCalendar size={18} />
-              <p>30 Dez 2021</p>
-            </span>
+                <span>
+                  <FiUser size={18} />
+                  <p>{post.data.author}</p>
+                </span>
+              </div>
+            </article>
+          </Link>
+        ))}
 
-            <span>
-              <FiUser size={18} />
-              <p>Augusto Souza</p>
-            </span>
-          </div>
-        </article>
-        <article className={styles.post}>
-          <h1>How to create a blog using Next.js and Prismic CMS</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            amet quia?
-          </p>
-          <div className={styles.postInfo}>
-            <span>
-              <FiCalendar size={18} />
-              <p>30 Dez 2021</p>
-            </span>
-
-            <span>
-              <FiUser size={18} />
-              <p>Augusto Souza</p>
-            </span>
-          </div>
-        </article>
         <LoadMoreButton />
+        {/* {postsPagination.next_page !== null ? <LoadMoreButton /> : null} */}
       </main>
     </>
   );
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
 
-//   // TODO
-// };
+  const postsResponse = await prismic.query(
+    [Prismic.predicates.at('document.type', 'post')],
+    {
+      fetch: ['post.title', 'post.subtitle', 'post.author'],
+      pageSize: 10,
+    }
+  );
+
+  const posts = postsResponse.results.map((post: Post) => {
+    return {
+      uid: post.uid,
+      first_publication_date: post.first_publication_date,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author,
+      },
+    };
+  });
+
+  const postsPagination = {
+    results: posts,
+    next_page: postsResponse.next_page,
+  };
+
+  return {
+    props: {
+      postsPagination,
+    },
+  };
+};
