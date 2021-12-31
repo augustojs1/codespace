@@ -1,1 +1,41 @@
-// TODO
+.homeContainer {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.post {
+  padding: 1rem 0rem;
+
+  h1 {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 33.8px;
+    padding: 2px 0;
+  }
+
+  p {
+    color: var(--gray);
+    font-weight: 400;
+    font-size: 1.125rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+.postInfo {
+  display: flex;
+
+  span {
+    display: flex;
+
+    p {
+      font-weight: 400;
+      font-size: 0.875rem;
+      margin-left: 0.5rem;
+    }
+  }
+
+  span + span {
+    margin-left: 1.5rem;
+  }
+}
