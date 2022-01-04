@@ -5,7 +5,7 @@ export function LoadMoreButton() {
   return (
     //
     <button type="button" className={styles.loadButton}>
-      Load more posts
+      Carregar mais posts
     </button>
   );
 }

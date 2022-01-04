@@ -39,7 +39,7 @@ export default function Home({ postsPagination }: HomeProps) {
       </Head>
       <main className={styles.homeContainer}>
         {postsPagination.results.map(post => (
-          <Link key={post.uid} href={`/posts/${post.uid}`}>
+          <Link key={post.uid} href={`/post/${post.uid}`}>
             <article className={styles.post}>
               <h1>{post.data.title}</h1>
               <p>{post.data.subtitle}</p>
@@ -58,8 +58,8 @@ export default function Home({ postsPagination }: HomeProps) {
           </Link>
         ))}
 
-        <LoadMoreButton />
-        {/* {postsPagination.next_page !== null ? <LoadMoreButton /> : null} */}
+        {/* <LoadMoreButton /> */}
+        {postsPagination.next_page !== null ? <LoadMoreButton /> : null}
       </main>
     </>
   );
